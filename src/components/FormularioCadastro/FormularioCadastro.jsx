@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core";
 
-function FormularioCadastro() {
+function FormularioCadastro({ validarCPF }) {
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [promocoes, setPromocoes] = useState(true);
+  const [novidades, setNovidades] = useState(false);
+  const [erros, setErros] = useState({
+    cpf: {
+      valid: true,
+      text: "",
+    },
+  });
   return (
     <form
       onSubmit={(event) => {
@@ -37,6 +46,18 @@ function FormularioCadastro() {
         fullWidth
       />
       <TextField
+        value={cpf}
+        onChange={(event) => {
+          setCpf(event.target.value);
+        }}
+        onBlur={(event) => {
+          const isValid = validarCPF(cpf);
+          setErros({
+            cpf: isValid,
+          });
+        }}
+        error={!erros.cpf.valid}
+        helperText={erros.cpf.text}
         id="CPF"
         label="CPF"
         variant="outlined"
@@ -45,11 +66,29 @@ function FormularioCadastro() {
       />
       <FormControlLabel
         label="Promoções"
-        control={<Switch name="promocoes" color="primary" defaultChecked />}
+        control={
+          <Switch
+            checked={promocoes}
+            onChange={(event) => {
+              setPromocoes(event.target.checked);
+            }}
+            name="promocoes"
+            color="primary"
+          />
+        }
       />
       <FormControlLabel
         label="Novidades"
-        control={<Switch name="novidades" color="primary" defaultChecked />}
+        control={
+          <Switch
+            checked={novidades}
+            onChange={(event) => {
+              setNovidades(event.target.checked);
+            }}
+            name="novidades"
+            color="primary"
+          />
+        }
       />
 
       <Button type="submit" variant="contained" color="primary">

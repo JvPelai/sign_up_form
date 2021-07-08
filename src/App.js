@@ -8,9 +8,17 @@ function App() {
       <Typography variant="h3" component="h1" align="center">
         Formulário de Cadastro
       </Typography>
-      <FormularioCadastro />
+      <FormularioCadastro validarCPF={validarCPF} />
     </Container>
   );
+}
+
+function validarCPF(cpf) {
+  if (cpf.length !== 11) {
+    return { valid: false, text: "CPF deve ter 11 digitos." };
+  } else {
+    return { valid: true, text: "" };
+  }
 }
 
 export default App;
