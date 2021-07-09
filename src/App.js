@@ -10,9 +10,13 @@ function App() {
       <Typography variant="h3" component="h1" align="center">
         Formulário de Cadastro
       </Typography>
-      <FormularioCadastro validarCPF={validarCPF} />
+      <FormularioCadastro validarCPF={validarCPF} handleSubmit={handleSubmit} />
     </Container>
   );
+}
+
+function handleSubmit(data) {
+  console.log(data);
 }
 
 function validarCPF(cpf) {

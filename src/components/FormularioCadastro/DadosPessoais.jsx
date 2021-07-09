@@ -17,6 +17,7 @@ function DadosPessoais({ validarCPF, handleSubmit }) {
     <form
       onSubmit={(event) => {
         event.preventDefault();
+        handleSubmit({ nome, sobrenome, cpf, promocoes, novidades });
       }}
     >
       <TextField
