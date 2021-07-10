@@ -4,7 +4,7 @@ import DadosPessoais from "./DadosPessoais";
 import DadosUsuario from "./DadosUsuario";
 import { Typography, Stepper, Step, StepLabel } from "@material-ui/core";
 
-function FormularioCadastro({ handleSubmit, validacoes }) {
+function FormularioCadastro({ handleSubmit }) {
   const [currentFormStep, setCurrentFormStep] = useState(0);
   const [formData, setFormData] = useState({});
 
@@ -15,9 +15,9 @@ function FormularioCadastro({ handleSubmit, validacoes }) {
   });
 
   const formSections = [
-    <DadosUsuario handleSubmit={collectFormData} validacoes={validacoes} />,
-    <DadosPessoais validarCPF={validacoes.cpf} handleSubmit={collectFormData} />,
-    <DadosEntrega handleSubmit={collectFormData} validacoes={validacoes} />,
+    <DadosUsuario handleSubmit={collectFormData}  />,
+    <DadosPessoais  handleSubmit={collectFormData} />,
+    <DadosEntrega handleSubmit={collectFormData}  />,
     <Typography variant="h5">Obrigado pelo Cadastro!</Typography>,
   ];
 

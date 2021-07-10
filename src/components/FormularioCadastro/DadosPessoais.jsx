@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core";
+import ValidacoesCadastro from "../../contexts/ValidacoesCadastro";
 
-function DadosPessoais({ validacoes, handleSubmit }) {
+function DadosPessoais({ handleSubmit }) {
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
   const [cpf, setCpf] = useState("");
@@ -12,7 +13,21 @@ function DadosPessoais({ validacoes, handleSubmit }) {
       valid: true,
       text: "",
     },
+    nome: {
+      valid: true,
+      text: "",
+    },
   });
+  const validacoes = useContext(ValidacoesCadastro);
+
+  function validateField(event) {
+    const { name, value } = event.target;
+    const isValid = validacoes[name](value);
+    const newState = { ...erros };
+    newState[name] = isValid;
+    setErros(newState);
+  }
+
   return (
     <form
       onSubmit={(event) => {
@@ -23,14 +38,13 @@ function DadosPessoais({ validacoes, handleSubmit }) {
       <TextField
         value={nome}
         onChange={(event) => {
-          let tempNome = event.target.value;
-          if (tempNome.length > 3) {
-            tempNome = tempNome.substr(0, 3);
-          }
-          setNome(tempNome);
+          setNome(event.target.value);
         }}
         id="nome"
         label="Nome"
+        name="nome"
+        onBlur={validateField}
+        error={!erros.nome.valid}
         required
         variant="outlined"
         margin="normal"
@@ -52,16 +66,12 @@ function DadosPessoais({ validacoes, handleSubmit }) {
         onChange={(event) => {
           setCpf(event.target.value);
         }}
-        onBlur={(event) => {
-          const isValid = validacoes.cpf(cpf);
-          setErros({
-            cpf: isValid,
-          });
-        }}
+        onBlur={validateField}
         error={!erros.cpf.valid}
         helperText={erros.cpf.text}
         id="CPF"
         label="CPF"
+        name="cpf"
         required
         variant="outlined"
         margin="normal"
@@ -95,7 +105,7 @@ function DadosPessoais({ validacoes, handleSubmit }) {
       />
 
       <Button type="submit" variant="contained" color="primary">
-        Cadastrar
+        Próximo
       </Button>
     </form>
   );
