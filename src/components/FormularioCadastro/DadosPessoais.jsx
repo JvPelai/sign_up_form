@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core";
 
-function DadosPessoais({ validarCPF, handleSubmit }) {
+function DadosPessoais({ validacoes, handleSubmit }) {
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
   const [cpf, setCpf] = useState("");
@@ -53,7 +53,7 @@ function DadosPessoais({ validarCPF, handleSubmit }) {
           setCpf(event.target.value);
         }}
         onBlur={(event) => {
-          const isValid = validarCPF(cpf);
+          const isValid = validacoes.cpf(cpf);
           setErros({
             cpf: isValid,
           });
