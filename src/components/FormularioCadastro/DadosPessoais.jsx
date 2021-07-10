@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core";
 import ValidacoesCadastro from "../../contexts/ValidacoesCadastro";
+import useErros from "../../hooks/useErros";
 
 function DadosPessoais({ handleSubmit }) {
   const [nome, setNome] = useState("");
@@ -8,31 +9,16 @@ function DadosPessoais({ handleSubmit }) {
   const [cpf, setCpf] = useState("");
   const [promocoes, setPromocoes] = useState(true);
   const [novidades, setNovidades] = useState(false);
-  const [erros, setErros] = useState({
-    cpf: {
-      valid: true,
-      text: "",
-    },
-    nome: {
-      valid: true,
-      text: "",
-    },
-  });
   const validacoes = useContext(ValidacoesCadastro);
-
-  function validateField(event) {
-    const { name, value } = event.target;
-    const isValid = validacoes[name](value);
-    const newState = { ...erros };
-    newState[name] = isValid;
-    setErros(newState);
-  }
+  const [erros, validarCampos, possoEnviar] = useErros(validacoes);
 
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        handleSubmit({ nome, sobrenome, cpf, promocoes, novidades });
+        if (possoEnviar()) {
+          handleSubmit({ nome, sobrenome, cpf, promocoes, novidades });
+        }
       }}
     >
       <TextField
@@ -43,8 +29,9 @@ function DadosPessoais({ handleSubmit }) {
         id="nome"
         label="Nome"
         name="nome"
-        onBlur={validateField}
-        error={!erros.nome.valid}
+        onBlur={validarCampos}
+        error={!erros.nome.valido}
+        helperText={erros.nome.texto}
         required
         variant="outlined"
         margin="normal"
@@ -66,9 +53,9 @@ function DadosPessoais({ handleSubmit }) {
         onChange={(event) => {
           setCpf(event.target.value);
         }}
-        onBlur={validateField}
-        error={!erros.cpf.valid}
-        helperText={erros.cpf.text}
+        onBlur={validarCampos}
+        error={!erros.cpf.valido}
+        helperText={erros.cpf.texto}
         id="CPF"
         label="CPF"
         name="cpf"

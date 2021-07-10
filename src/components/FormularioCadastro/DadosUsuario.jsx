@@ -1,41 +1,20 @@
 import { Button, TextField } from "@material-ui/core";
 import React, { useState, useContext } from "react";
 import ValidacoesCadastro from "../../contexts/ValidacoesCadastro";
+import useErros from "../../hooks/useErros";
 
 function DadosUsuario({ handleSubmit }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [erros, setErros] = useState({
-    senha: {
-      valid: true,
-      text: "",
-    },
-  });
-
   const validacoes = useContext(ValidacoesCadastro);
-  function validateField(event) {
-    const { name, value } = event.target;
-    const isValid = validacoes[name](value);
-    const newState = { ...erros };
-    newState[name] = isValid;
-    setErros(newState);
-  }
+  const [erros, validarCampos, possoEnviar] = useErros(validacoes);
 
-  function canProceed() {
-    let proceed = true;
-    for (let err in erros) {
-      if (!erros[err].valid) {
-        proceed = false;
-      }
-    }
-    return proceed;
-  }
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        if (canProceed()) {
+        if (possoEnviar()) {
           handleSubmit({ email, password });
         }
       }}
@@ -59,12 +38,12 @@ function DadosUsuario({ handleSubmit }) {
         onChange={(event) => {
           setPassword(event.target.value);
           if (event.target.value >= 4) {
-            validateField(event);
+            validarCampos(event);
           }
         }}
-        onBlur={validateField}
-        error={!erros.senha.valid}
-        helperText={erros.senha.text}
+        onBlur={validarCampos}
+        error={!erros.senha.valido}
+        helperText={erros.senha.texto}
         id="password"
         label="senha"
         type="password"
